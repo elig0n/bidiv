@@ -1,0 +1,33 @@
+TODO: write a decent README...
+
+In one of the Ivrix meetings we had, one of the problems raised is that we
+don't have (or have, but don't use) a standard method of representing Hebrew
+text files. Such Hebrew text files include:
+
+1. Hebrew E-Mail
+2. Simple Hebrew texts (e.g., a README in Hebrew)
+3. Manual pages in Hebrew.
+
+This is why I wrote a very simple program based on Fribidi, that acts as a
+filter or viewer (with similar semantics as the 'cat' command) for logical-
+order ISO-8859-8 or UTF8 files: The logical text is converted to visual
+ISO-8859-8 (or UTF8) assuming a fixed number of characters per line
+(automatically determined or given with the -w parameter).
+
+I called this program 'bidiv', for "bidi viewer". You can get it in
+ftp://ftp.ivrix.org.il/pub/ivrix/src/cmdline/bidiv-1.0.tgz
+It's a tiny program indeed: the executable is only 5k (when using the
+fribidi shared library). By the way, I also put a copy of fribidi on the
+ivrix ftp: ftp://ftp.ivrix.org.il/pub/ivrix/src/lib/fribidi-0.1.15.tar.gz
+
+Example usages of bidiv:
+1. bidiv README | less
+2. man something | bidiv | less
+   (or groff -man -Tlatin1 something.1 |sed 's/.^H\(.\)/\1/g' |../bidiv -w 65)
+3. set "bidiv" as a filter for your mail program (mutt, pine, etc.) for viewing
+   mail with the ISO 8859-8 character set.
+
+----------------------------------------------------------------------------
+
+Copyright (c) 2001-2006 Nadav Har'El
+License: GNU General Public License version 2

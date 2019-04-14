@@ -1,0 +1,42 @@
+Release 1.5: Jan 7, 2006
+  * Fixed buffer size error that caused buffer overflows (and crashes) in
+    certain cases. Thanks to Dan Kenigsberg and to Shachar Raindel for
+    reporting the bug and suggesting patches.
+  * Update bidiv(1) manual to reflect bidiv's UTF8 capabilities (that already
+    existed in release 1.4).
+  * Clarify GPL license in bidiv.c and README, and include GPL's "COPYING"
+    license file in the bidiv distribution.
+
+Release 1.4: Oct 21, 2002
+  * Fix auto direction so that if the first line of a paragraph has no
+    direction, the direction of the previous paragraph is used temporarily.
+    See tests/1. (Nadav Har'El)
+  * utf8 is output (instead of iso8859-8) when LC_CTYPE is something.UTF-8.
+    Note that if both the input and output is utf8, then it may contain
+    things other than Hebrew, with no ill-effects. Currently no option to
+    force utf8 (or iso8859-8) output other then changing the locale.
+  * When the first character was nonascii didn't look like a Hebrew character, 
+    we assumed it and the next character compose utf8. But when this doesn't
+    make sense (e.g., the second character is ascii, e.g., a newline) we ruined
+    two characters. Better ruin only one by our transformation :)
+
+Release 1.3: Apr 17, 2001
+  * Small changes to manual page. (Nadav Har'El)
+  * Fix serious bug in utf8 handling. Now utf8 is recognized on a byte-by-byte
+    basis. (Nadav Har'El)
+
+Release 1.2: Apr 14, 2001
+  * Improved manual page (Nadav Har'El)
+  * experimental code to guess if text is utf8 or utf8. Actually does it
+    on a line-per-line basis. (Nadav Har'El)
+
+Release 1.1: Feb 20, 2001
+  * Fixed compilation errors on some system (Nadav Har'El)
+  * Better makefile (Tzafrir Cohen)
+  * Rudementary README (Tzafrir Cohen, Nadav Har'El)
+  * Fixed exit status (Nadav Har'El)
+  * Rudementary manual page (Nadav Har'El)
+  * RPM "spec" file (Tzafrir Cohen)
+
+Release 1.0:
+  * Initial release (Nadav Har'El)

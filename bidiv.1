@@ -1,0 +1,205 @@
+'\" t
+.\" Copyright (c) 2001, Nadav Har'El
+.TH bidiv 1 "7 Jan 2006" "Bidiv" "Ivrix"
+.SH NAME
+bidiv \- bidirectional text filter
+.SH SYNOPSIS
+.B bidiv
+[
+.B \-plj
+]
+[
+.BI \-w\  width
+]
+.BI [\| file\|.\|.\|. \|]
+.SH DESCRIPTION
+.B bidiv
+is a filter, or viewer, for birectional text stored in logical-order. It
+converts such text into
+visual-order text which can be viewed on terminals that do not handle
+bidirectionality. The output visual-order text is formatted
+assuming a fixed number of characters per line (automatically determined
+or given with the
+.B -w
+parameter).
+
+.B bidiv
+is oriented towards Hebrew, and assumes the input to be
+a Hebrew and ASCII text encoded in one of the two common logical-order
+encodings: ISO-8859-8-i or UTF-8. Actually, bidiv guesses the encoding of its
+input at a character by
+character basis, so the input might be a mix of ISO-8859-8-i and Hebrew UTF-8.
+.BR bidiv 's
+output is visual-order text, in either the ISO-8859-8
+or UTF-8 encoding, depending on your locale setting.
+
+.B bidiv
+reads each
+.I file\^
+in sequence, converts it into visual order 
+and writes it on the standard output.
+Thus:
+.PP
+.RS
+.B "$ bidiv file"
+.RE
+.PP
+prints
+.B file
+on your terminal (assuming it has the appropriate fonts, but no
+bidirectionality support), and:
+.PP
+.RS
+.B "$ bidiv file1 file2 | less"
+.RE
+.PP
+concatenates
+.B file1
+and
+.BR file2 ,
+and shows the results using the pager
+.BR less .
+.PP
+If no input file is given,
+.B bidiv
+reads from the standard
+input file.
+
+For more ideas on how to use
+.BR bidiv ,
+see the
+.B EXAMPLES
+section below.
+.SH OPTIONS
+.TP
+.B \-p 
+Paragraph-based direction (default):
+When formatting a bidirectional output line,
+.B bidiv
+needs to be aware of that line's base direction. A line whose base direction
+is RTL (right to left) gets right-justified and its first element appears
+on the right. Otherwise, the line is left-justified and its first element
+appears on the left.
+
+The
+.B \-p
+option tells
+.B bidiv
+to choose a base direction per paragraph, where a paragraph is delimited by
+an empty line. This is bidiv's default behavior, and usually gives the
+expected results on most texts and emails.
+
+The direction of the entire paragraph is chosen according to the first
+strongly-directioned character (i.e., an alphabetic character) appearing
+in the paragraph. Currently, if the first output line of a paragraph has
+no directional characters (e.g., a line of minus signs before an email
+signature, or a line containing only numbers) that line is output with the
+same direction of the previous paragraph, but it does not determine
+the direction of the rest of the paragraph. If the first line of the
+first paragraph does not have a direction, the RTL direction is
+arbitrarily chosen.
+.TP
+.B \-l
+Line-based direction:
+This option choose an alternative method of choosing each output line's
+base direction. When this option is enabled, the base direction of each output
+line is determined on its own (again, according to the first character on
+the line with a strong direction). This method may give wrong results in
+the case where a line starts with a word of the opposite direction. This
+case is rare, but does happen under random line-splitting circumstances, or
+when the text is defining words of a foreign language.
+
+.\"TODO: maybe add another option to choose direction based on _input_ line. Would
+.\"that be useful at all? I doubt it.
+.TP
+.B \-j
+Do not justify:
+By default, RTL lines are right-justified, i.e., they are padded with spaces
+on the left when shorter than the required line width (see the
+.B \-w
+option). The
+.B \-j
+option tells
+.B bidiv
+not to preform this justifications, and leave short lines unpadded.
+.TP
+.BI \-w\  width
+.B bidiv
+formats its output for lines of the given width. Lines are split when
+longer than this width, and RTL lines are right-justfied to fill that
+width unless the
+.B \-j
+option is given.
+
+When the
+.B \-w
+option is not given,
+.B bidiv
+uses the value of the
+.B COLUMNS
+variable, which is usually automatically defined by the user's shell.
+When that both the
+.B \-w
+option and the
+.B COLUMNS
+variable are missing, the default of 80 columns is used.
+.SH OPERANDS
+The following operand is supported:
+.TP 8
+.I file
+A path name of an input file.
+If no
+.I file
+is specified,
+the standard input is used.
+.\"If
+.\".I file
+.\"is
+.\".RB ` \|\-\| ',
+.\".B bidiv
+.\"will read from the standard input at that point in the sequence.
+.\".B bidiv
+.\"will not close and reopen standard input when
+.\"it is referenced in this way, but will accept multiple occurrences of
+.\".RB ` \|\-\| '
+.\"as
+.\".IR file .
+
+.\"TODO: the part about the "-" is currently not true...
+.SH EXAMPLES
+.TP 3
+1.
+bidiv README | less
+.TP 3
+2.
+man something | bidiv | less
+
+(or groff -man -Tlatin1 something.1 |sed 's/.^H\\(.\\)/\\1/g' |../bidiv -w 65)
+.TP 3 
+3.
+set "bidiv" as a filter for your mail program (mutt, pine, etc.) for viewing
+mail with the ISO 8859-8-i character set, and Hebrew UTF-8 mail.
+
+.SH ENVIRONMENT
+.B COLUMNS
+see
+.B -w
+option.
+.SH "EXIT STATUS"
+The following exit values are returned:
+.TP 4
+.B 0
+All input files were output successfully.
+.TP
+.B >0
+An error occurred.
+.SH "AUTHOR"
+Written by Nadav Har'El, http://nadav.harel.org.il.
+
+Please send bug reports and comments to nyh@math.technion.ac.il.
+
+The latest version of this software can be found in
+.B ftp://ftp.ivrix.org.il/pub/ivrix/src/cmdline
+.SH "SEE ALSO"
+.BR cat (1),
+.BR fribidi (3)
