@@ -136,8 +136,9 @@ bidiv(FILE *fp)
 				*/
 				if(c1<0x80||c1>0xbf){
 					ungetc(c1, fp);
-					unicode_in[len]=
-						fribidi_iso8859_8_to_unicode_c(c);
+					fribidi_charset_to_unicode(
+						FRIBIDI_CHAR_SET_ISO8859_8,
+						&c, 1, &unicode_in[len]);
 				} else
 				unicode_in[len]=((c & 037) << 6) + (c1 & 077);
 				newline=0;
@@ -148,8 +149,9 @@ bidiv(FILE *fp)
 				   In the future we will have a language
 				   option, which will control this (as well
 				   as the output encoding). */
-				unicode_in[len]=
-					fribidi_iso8859_8_to_unicode_c(c);
+				fribidi_charset_to_unicode(
+					FRIBIDI_CHAR_SET_ISO8859_8,
+					&c, 1, &unicode_in[len]);
 #else
 				in[len]=c;
 #endif
@@ -201,11 +203,11 @@ bidiv(FILE *fp)
 			rtl_line=0;
 
 		if(out_utf8)
-			fribidi_unicode_to_utf8(unicode_out, len,
-					     out);
+			fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_UTF8,
+					unicode_out, len, out);
 		else
-			fribidi_unicode_to_iso8859_8(unicode_out, len,
-						     out);
+			fribidi_unicode_to_charset(FRIBIDI_CHAR_SET_ISO8859_8,
+				unicode_out, len, out);
 		/* if rtl_line (i.e., base_dir is RL), and we didn't fill the
 		   entire width, we need to pad with spaces. Maybe in the
 		   future this should be an option.

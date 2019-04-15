@@ -4,8 +4,8 @@ MAN_PATH=$(PREFIX)/man
 CC_OPT_FLAGS=-O2 -Wall
 
 
-CFLAGS= $(CC_OPT_FLAGS) $(DEFS) `fribidi-config --cflags`
-LDFLAGS=`fribidi-config --libs`
+CFLAGS= $(CC_OPT_FLAGS) $(DEFS) `pkg-config --cflags fribidi`
+LDFLAGS=`pkg-config --libs fribidi`
 
 all: bidiv
 
